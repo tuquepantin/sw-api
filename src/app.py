@@ -8,8 +8,8 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User
-#from models import Person
+from models import db, User, Character, Planet, Favorite
+#from models import character
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -39,11 +39,52 @@ def sitemap():
 @app.route('/user', methods=['GET'])
 def handle_hello():
 
-    response_body = {
-        "msg": "Hello, this is your GET /user response "
-    }
+    user = User.query.all()
+    user = list(map (lambda item: item.serialize(), user ))
 
-    return jsonify(response_body), 200
+    return jsonify(user), 200
+
+@app.route('/character', methods=['GET'])
+def list_character(): 
+    if request.method == 'GET':
+        character = Character()
+        character = character.query.all()
+        character = list(map (lambda item: item.serialize(), character ))
+        return jsonify(character) ,200
+
+@app.route('/planet', methods=['GET'])
+def planet():
+    if request.method == 'GET':
+        planet = Planet()
+        planet = planet.query.all()
+        planet = list(map (lambda item: item.serialize(), planet ))
+        return jsonify(planet) ,200
+
+
+@app.route('/character/<int:character_id>', methods=['GET'])
+def get_character(character_id):
+    if request.method == 'GET':
+        character = Character()
+        character = character.query.get(character_id)
+        character = character.serialize()
+        return jsonify(character), 200
+
+
+@app.route('/planet/<int:planet_id>', methods=['GET'])
+def get_planet(planet_id):
+    if request.method == 'GET':
+        planet = Planet()
+        planet = planet.query.get(planet_id)
+        planet = planet.serialize()
+        return jsonify(planet), 200
+
+
+
+
+
+
+
+
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
