@@ -87,7 +87,7 @@ def list_user_fav(user_id):
 
 
 
-@api.route('/favorite/character/<int:character_id>', methods=['POST'])
+@app.route('/favorite/character/<int:character_id>', methods=['POST'])
 def add_favorite_character(character_id, user_id):
 
     favorite = Favorite.query.filter_by(character_id = character_id, user_id = user_id).first()
@@ -103,7 +103,7 @@ def add_favorite_character(character_id, user_id):
         return jsonify({"msg": error.args}), 500
 
 
-@api.route('/favorite/planet/<int:planet_id>', methods=['POST'])
+@app.route('/favorite/planet/<int:planet_id>', methods=['POST'])
 def add_favorite_planets(planet_id, user_id):
 
     favorite = Favorite.query.filter_by(planet_id = planet_id, user_id = user_id).first()
@@ -119,7 +119,7 @@ def add_favorite_planets(planet_id, user_id):
         return jsonify({"msg": error.args}), 500 
 
 
-@api.route('/favorite/character/<int:character_id>', methods=['DELETE'])
+@app.route('/favorite/character/<int:character_id>', methods=['DELETE'])
 def delete_favorite_character(character_id, user_id):
 
     favorite = Favorite.query.filter_by(character_id = character_id, user_id = user_id).first()
@@ -134,7 +134,7 @@ def delete_favorite_character(character_id, user_id):
         return jsonify({"msg": error.args}), 500
 
 
-@api.route('/favorite/planet/<int:planet_id>', methods=['DELETE'])
+@app.route('/favorite/planet/<int:planet_id>', methods=['DELETE'])
 def delete_favorite_planets(planet_id, user_id):
 
     favorite = Favorite.query.filter_by(planet_id = planet_id, user_id = user_id).first()
