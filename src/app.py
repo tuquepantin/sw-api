@@ -78,6 +78,76 @@ def get_planet(planet_id):
         planet = planet.serialize()
         return jsonify(planet), 200
 
+@app.route('/user/favorites/<int:user_id>', methods=['GET'])
+def list_user_fav(user_id):
+    
+    favorite = Favorite.query.filter_by(user_id=user_id).all()
+    favorite = list(map (lambda item: item.serialize(), favorite ))
+    return jsonify(favorite), 200
+
+
+
+@api.route('/favorite/character/<int:character_id>', methods=['POST'])
+def add_favorite_character(character_id, user_id):
+
+    favorite = Favorite.query.filter_by(character_id = character_id, user_id = user_id).first()
+    
+    if favorite is not None:
+        return jsonify({"msg": "Character it is already added"}), 400
+    favorite = Favorite(character_id = character_id, user_id = user_id)
+    db.session.add(favorite)
+    try:
+        db.session.commit()
+        return jsonify(favorite.serialize()), 201
+    except Exception as error:
+        return jsonify({"msg": error.args}), 500
+
+
+@api.route('/favorite/planet/<int:planet_id>', methods=['POST'])
+def add_favorite_planets(planet_id, user_id):
+
+    favorite = Favorite.query.filter_by(planet_id = planet_id, user_id = user_id).first()
+
+    if favorite is not None:
+        return jsonify({"msg": "Planet it is already added"}), 400
+    favorite = Favorite(planet_id = planet_id, user_id = user_id)
+    db.session.add(favorite)
+    try:
+        db.session.commit()
+        return jsonify(favorite.serialize()), 201
+    except Exception as error:
+        return jsonify({"msg": error.args}), 500 
+
+
+@api.route('/favorite/character/<int:character_id>', methods=['DELETE'])
+def delete_favorite_character(character_id, user_id):
+
+    favorite = Favorite.query.filter_by(character_id = character_id, user_id = user_id).first()
+
+    if favorite is None:
+        return jsonify({"msg": "Character does not exist"}), 400
+    db.session.delete(favorite)
+    try:
+        db.session.commit()
+        return jsonify(favorite.serialize()), 200 
+    except Exception as error:
+        return jsonify({"msg": error.args}), 500
+
+
+@api.route('/favorite/planet/<int:planet_id>', methods=['DELETE'])
+def delete_favorite_planets(planet_id, user_id):
+
+    favorite = Favorite.query.filter_by(planet_id = planet_id, user_id = user_id).first()
+
+    if favorite is None:
+        return jsonify({"msg": "Planet does not exist"}), 400
+    db.session.delete(favorite)
+    try:
+        db.session.commit()
+        return jsonify(favorite.serialize()), 200
+    except Exception as error:
+        return jsonify({"msg": error.args}), 500
+
 
 
 
